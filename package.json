@@ -14,7 +14,7 @@
     "clean": "rm -rf ./dist",
     "build": "yarn clean && tsc",
     "typedoc": "typedoc --out ./docs src/**.ts",
-    "postinstall": "build"
+    "postinstall": "yarn build"
   },
   "repository": {
     "type": "git",
