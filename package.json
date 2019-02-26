@@ -1,6 +1,6 @@
 {
   "name": "typeorm-utils",
-  "version": "0.1.0",
+  "version": "0.0.0",
   "description": "TypeORM additional utilities",
   "main": "dist/index.js",
   "author": "Piotr Deszyński",
@@ -14,7 +14,8 @@
     "clean": "rm -rf ./dist",
     "build": "yarn clean && tsc",
     "typedoc": "typedoc --out ./docs src/**.ts",
-    "postinstall": "rm -rf ./dist && tsc"
+    "postinstall": "rm -rf ./dist && tsc --build tsconfig.build.json",
+    "release": "standard-version"
   },
   "repository": {
     "type": "git",
@@ -22,22 +23,23 @@
   },
   "devDependencies": {
     "@types/cls-hooked": "^4.2.1",
-    "@types/jest": "^24.0.6",
+    "@types/jest": "^24.0.9",
     "cls-hooked": "^4.2.2",
     "jest": "^24.1.0",
     "prettier": "^1.14.3",
     "reflect-metadata": "^0.1.12",
-    "ts-node": "^7.0.1",
+    "standard-version": "^5.0.0",
+    "ts-node": "^8.0.2",
     "tslint": "^5.11.0",
     "tslint-config-prettier": "^1.15.0",
-    "typedoc": "^0.12.0",
+    "typedoc": "^0.14.2",
     "typeorm": "^0.2.8",
-    "typescript": "^3.0.3"
+    "typescript": "3.3.3333"
   },
   "peerDependencies": {
     "cls-hooked": ">= 4.2.2",
     "reflect-metadata": ">= 0.1.12",
     "typeorm": ">= 0.2.8",
-    "typescript": "^3.0.3"
+    "typescript": "3.1.6"
   }
 }

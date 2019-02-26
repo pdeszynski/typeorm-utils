@@ -1,15 +1,15 @@
 import { getNamespace } from 'cls-hooked';
-import { EntityManager, Repository as TypeORMRepository } from 'typeorm';
+import { EntityManager, Repository as TypeORMRepository, ObjectLiteral, FindConditions } from 'typeorm';
 import { ColumnMetadata } from 'typeorm/metadata/ColumnMetadata';
 import { RelationIdMetadata } from 'typeorm/metadata/RelationIdMetadata';
 import ISpecificationExtractor from './specification/ISpecificationExtractor';
 import Specification from './specification/Specification';
 import SpecificationExtractorTypeORM from './SpecificationExtractorTypeORM';
 
-const equalsField = <T>(specField: keyof T) =>
+const equalsField = <Entity extends ObjectLiteral>(specField: keyof Entity) =>
   (col: ColumnMetadata|RelationIdMetadata) => col.propertyName === specField || col.propertyName === `_${specField}`;
 
-class Repository<T> extends TypeORMRepository<T> {
+export default class Repository<Entity extends ObjectLiteral> extends TypeORMRepository<Entity> {
   protected _manager: EntityManager;
 
   public get manager(): EntityManager {
@@ -29,14 +29,14 @@ class Repository<T> extends TypeORMRepository<T> {
     this._manager = value;
   }
 
-  protected propertySpecMap: {[K in keyof T]: T[K]} = {} as any; // need to cheat the compiler here
+  protected propertySpecMap: {[K in keyof Entity]: Entity[K]} = {} as any; // need to cheat the compiler here
 
-  private readonly specificationExtractor: ISpecificationExtractor<T> = new SpecificationExtractorTypeORM<T>();
+  private readonly specificationExtractor: ISpecificationExtractor<Entity> = new SpecificationExtractorTypeORM<Entity>();
 
-  public async findBy(spec: Specification<T>): Promise<T[]> {
-    const searchCriteria = Object.entries(this.specificationExtractor.extract(spec)).reduce((prev: any, current) => {
+  public async findBy(spec: Specification<Entity>): Promise<Entity[]> {
+    const searchCriteria: FindConditions<Entity> = Object.entries(this.specificationExtractor.extract(spec)).reduce((prev: any, current) => {
       // need to cheat compiler here as object entries can only have strings (not keyofs)
-      const [specField, searchValue]: [keyof T, string] = current as any;
+      const [specField, searchValue]: [keyof Entity, string] = current as any;
 
       const column = this.metadata.columns.find(equalsField(specField))
         || this.metadata.relationIds.find(equalsField(specField));
@@ -55,11 +55,9 @@ class Repository<T> extends TypeORMRepository<T> {
     return this.find(searchCriteria);
   }
 
-  public async findOneBy(spec: Specification<T>): Promise<T> {
+  public async findOneBy(spec: Specification<Entity>): Promise<Entity> {
     const [result] = await this.findBy(spec);
 
     return result;
   }
 }
-
-export default Repository;
