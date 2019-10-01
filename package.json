@@ -12,7 +12,7 @@
   "scripts": {
     "lint": "tslint -p tsconfig.json -c tslint.json ./src/**/*.ts",
     "clean": "rm -rf ./dist",
-    "build": "yarn clean && tsc",
+    "build": "yarn clean && tsc -p tsconfig.build.json",
     "typedoc": "typedoc --out ./docs src/**.ts",
     "postinstall": "rm -rf ./dist && tsc --build tsconfig.build.json",
     "release": "standard-version"
@@ -23,18 +23,18 @@
   },
   "devDependencies": {
     "@types/cls-hooked": "^4.3.0",
-    "@types/jest": "^24.0.11",
+    "@types/jest": "^24.0.18",
     "cls-hooked": "^4.2.2",
-    "jest": "^24.7.1",
-    "prettier": "^1.14.3",
+    "jest": "^24.9.0",
+    "prettier": "^1.18.2",
     "reflect-metadata": "^0.1.12",
-    "standard-version": "^5.0.2",
-    "ts-node": "^8.0.3",
-    "tslint": "^5.15.0",
+    "standard-version": "^7.0.0",
+    "ts-node": "^8.4.1",
+    "tslint": "^5.20.0",
     "tslint-config-prettier": "^1.15.0",
-    "typedoc": "^0.14.2",
-    "typeorm": "^0.2.16",
-    "typescript": "3.4.3"
+    "typedoc": "^0.15.0",
+    "typeorm": "^0.2.19",
+    "typescript": "3.6.3"
   },
   "peerDependencies": {
     "cls-hooked": ">= 4.2.2",
@@ -43,6 +43,6 @@
     "typescript": ">= 3.1.6"
   },
   "dependencies": {
-    "@types/node": "^11.13.4"
+    "@types/node": "^12.7.8"
   }
 }
