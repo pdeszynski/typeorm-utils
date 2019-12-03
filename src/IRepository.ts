@@ -9,6 +9,7 @@ interface IRepository<T> {
   findByIds(ids: any[]): Promise<T[]>;
   findOne(id: string|number|Date): Promise<T|undefined>;
   findBy(spec: Specification<T>): Promise<T[]>;
+  countBy(spec: Specification<T>): Promise<number>;
   findOneBy(spec: Specification<T>): Promise<T|null>;
   create(): T;
 }

@@ -33,8 +33,8 @@ export default class Repository<Entity extends ObjectLiteral> extends TypeORMRep
 
   private readonly specificationExtractor: ISpecificationExtractor<Entity> = new SpecificationExtractorTypeORM<Entity>();
 
-  public async findBy(spec: Specification<Entity>): Promise<Entity[]> {
-    const searchCriteria: FindConditions<Entity> = Object.entries(this.specificationExtractor.extract(spec)).reduce((prev: any, current) => {
+  protected searchCriteria(spec: Specification<Entity>): FindConditions<Entity> {
+    return Object.entries(this.specificationExtractor.extract(spec)).reduce((prev: any, current) => {
       // need to cheat compiler here as object entries can only have strings (not keyofs)
       const [specField, searchValue]: [keyof Entity, string] = current as any;
 
@@ -51,8 +51,18 @@ export default class Repository<Entity extends ObjectLiteral> extends TypeORMRep
       prev[mappedValue || column.propertyName] = searchValue;
       return prev;
     }, {});
+  }
+
+  public async findBy(spec: Specification<Entity>): Promise<Entity[]> {
+    const searchCriteria: FindConditions<Entity> = this.searchCriteria(spec);
 
     return this.find(searchCriteria);
+  }
+
+  public async countBy(spec: Specification<Entity>): Promise<number> {
+    const searchCriteria = this.searchCriteria(spec);
+
+    return this.count(searchCriteria);
   }
 
   public async findOneBy(spec: Specification<Entity>): Promise<Entity> {
