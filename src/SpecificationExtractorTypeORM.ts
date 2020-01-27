@@ -5,6 +5,7 @@ import ISpecification from './specification/ISpecification';
 import ISpecificationExtractor from './specification/ISpecificationExtractor';
 import LessThanSpecification from './specification/LessThanSpecification';
 import MoreThanSpecification from './specification/MoreThanSpecification';
+import OrSpecification from './specification/OrSpecification';
 
 /**
  * This class is responsible of translating given specification to typeorm query.
@@ -34,7 +35,17 @@ class SpecificationExtractorTypeORM<T> implements ISpecificationExtractor<T> {
         ...specLeft,
         ...specRight,
       };
-    } else if (spec instanceof BetweenSpecification) {
+    }
+    else if (spec instanceof OrSpecification) {
+      const [left, right] = spec.rules();
+      const specLeft = this.extract(left);
+      const specRight = this.extract(right);
+      return [
+        specLeft,
+        specRight,
+      ];
+    }
+    else if (spec instanceof BetweenSpecification) {
       return {
         [spec.field]: Between(spec.min, spec.max)
       };

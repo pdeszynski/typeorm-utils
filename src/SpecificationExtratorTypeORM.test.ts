@@ -5,14 +5,14 @@ import LessThanSpecification from './specification/LessThanSpecification';
 import MoreThanSpecification from './specification/MoreThanSpecification';
 import Specification from './specification/Specification';
 import SpecificationExtractorTypeORM from './SpecificationExtractorTypeORM';
+import OrSpecification from './specification/OrSpecification';
+class Dummy {
+  public field: string;
+  public field1: string;
+  public field2: number;
+}
 
 describe('SpecificationExtractorTypeORM', () => {
-  class Dummy {
-    public field: string;
-    public field1: string;
-    public field2: number;
-  }
-
   let specExtractor: SpecificationExtractorTypeORM<Dummy>;
 
   beforeEach(() => {
@@ -54,6 +54,18 @@ describe('SpecificationExtractorTypeORM', () => {
       field2: Not('a value 2'),
     });
   });
+
+  it('will extract a value from OR specification', () => {
+    const spec = new OrSpecification(
+      new ValueSpecification<Dummy>('field1', 'a value 1'),
+      new NotSpecification<Dummy>(new ValueSpecification<Dummy>('field1', 'a value 2'))
+    );
+
+    expect(specExtractor.extract(spec)).toEqual([
+      { field1: 'a value 1'},
+      { field1: Not('a value 2')},
+    ])
+  })
 
   it('will extract a value from BetweenSpecification', () => {
     const spec = new BetweenSpecification('field', 10, 20);
