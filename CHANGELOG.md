@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.3](https://github.com/noahadvisors/typeorm-utils/compare/v0.1.2...v0.1.3) (2020-01-27)
+
+
+### Features
+
+* **or:** Added or specification ([ec6a2ac](https://github.com/noahadvisors/typeorm-utils/commit/ec6a2acc31e045e3e1966a83c71a4b0558c74a6d))
+
 ### [0.1.2](https://github.com/noahadvisors/typeorm-utils/compare/v0.1.1...v0.1.2) (2019-12-03)
 
 
