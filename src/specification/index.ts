@@ -2,6 +2,7 @@
 export { default as Specification } from './Specification';
 
 export { default as AndSpecification } from './AndSpecification';
+export { default as OrSpecification } from './OrSpecification';
 export { default as NotSpecification } from './NotSpecification';
 export { default as ValueSpecification } from './ValueSpecification';
 export { default as BetweenSpecification } from './BetweenSpecification';

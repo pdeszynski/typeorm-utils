@@ -122,4 +122,20 @@ describe('SpecificationExtractorTypeORM', () => {
 
     expect(() => specExtractor.extract(spec)).not.toThrowError();
   });
+  it('will allow mixing and and or', () => {
+    class SomeSpec extends Specification<Dummy> {
+      public rules() {
+        return new ValueSpecification<Dummy>('field', 'value').or(new AndSpecification(
+          new ValueSpecification('field1', 'value 2'),
+          new ValueSpecification('field2', 3),
+        ))
+      }
+    }
+
+    const spec = new SomeSpec();
+
+    expect(specExtractor.extract(spec)).toEqual(
+      [ { field: 'value' }, { field1: 'value 2', field2: 3 } ]
+    );
+  })
 });
