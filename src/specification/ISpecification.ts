@@ -8,8 +8,7 @@ interface ISpecification<T> {
 
   and(specification: ISpecification<T>): ISpecification<T>;
 
-  // TODO: not yet supported
-  // or(specification: ISpecification): ISpecification;
+  or(specification: ISpecification<T>): ISpecification<T>;
 
   // TODO: not yet supported
   // not(): ISpecification;
