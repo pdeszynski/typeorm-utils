@@ -1,6 +1,6 @@
 {
   "name": "typeorm-utils",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "TypeORM additional utilities",
   "main": "dist/index.js",
   "author": "Piotr Deszyński",
@@ -35,6 +35,7 @@
     "tslint": "^6.0.0",
     "tslint-config-prettier": "^1.15.0",
     "typedoc": "^0.16.9",
+    "typemoq": "^2.1.0",
     "typeorm": "^0.2.22",
     "typescript": "3.7.5"
   },
