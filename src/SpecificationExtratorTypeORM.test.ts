@@ -125,10 +125,11 @@ describe('SpecificationExtractorTypeORM', () => {
   it('will allow mixing and and or', () => {
     class SomeSpec extends Specification<Dummy> {
       public rules() {
-        return new ValueSpecification<Dummy>('field', 'value').or(new AndSpecification(
+        return new OrSpecification(new ValueSpecification<Dummy>('field', 'value'),
+        new AndSpecification(
           new ValueSpecification('field1', 'value 2'),
           new ValueSpecification('field2', 3),
-        ))
+        ));
       }
     }
 

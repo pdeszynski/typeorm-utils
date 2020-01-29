@@ -1,3 +1,4 @@
+import { ValueSpecification } from './specification';
 
 export { Transaction } from './Transaction';
 export { default as IRepository } from './IRepository';

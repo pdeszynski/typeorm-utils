@@ -2,7 +2,7 @@ import { Between, IsNull, LessThan, MoreThan, Not } from 'typeorm';
 import { AndSpecification, BetweenSpecification, NotSpecification, ValueSpecification } from './specification';
 import IsNullSpecification from './specification/IsNullSpecification';
 import ISpecification from './specification/ISpecification';
-import ISpecificationExtractor from './specification/ISpecificationExtractor';
+import ISpecificationExtractor, { Criteria } from './specification/ISpecificationExtractor';
 import LessThanSpecification from './specification/LessThanSpecification';
 import MoreThanSpecification from './specification/MoreThanSpecification';
 import OrSpecification from './specification/OrSpecification';
@@ -12,7 +12,7 @@ import OrSpecification from './specification/OrSpecification';
  * At the current moment it translates to find method options.
  */
 class SpecificationExtractorTypeORM<T> implements ISpecificationExtractor<T> {
-  public extract(spec: ISpecification<T>): { [key: string]: any } {
+  public extract(spec: ISpecification<T>): Criteria<T> | Criteria<T>[] {
     if (spec instanceof ValueSpecification) {
       return spec.rules();
     } else if (spec instanceof NotSpecification) {

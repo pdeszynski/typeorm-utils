@@ -1,8 +1,8 @@
 import { getNamespace } from 'cls-hooked';
-import { EntityManager, Repository as TypeORMRepository, ObjectLiteral, FindConditions } from 'typeorm';
+import { EntityManager, Repository as TypeORMRepository, ObjectLiteral, FindConditions, EntityMetadata } from 'typeorm';
 import { ColumnMetadata } from 'typeorm/metadata/ColumnMetadata';
 import { RelationIdMetadata } from 'typeorm/metadata/RelationIdMetadata';
-import ISpecificationExtractor from './specification/ISpecificationExtractor';
+import ISpecificationExtractor, { Criteria } from './specification/ISpecificationExtractor';
 import Specification from './specification/Specification';
 import SpecificationExtractorTypeORM from './SpecificationExtractorTypeORM';
 
@@ -11,6 +11,18 @@ const equalsField = <Entity extends ObjectLiteral>(specField: keyof Entity) =>
 
 export default class Repository<Entity extends ObjectLiteral> extends TypeORMRepository<Entity> {
   protected _manager: EntityManager;
+
+  constructor(manager?: EntityManager, metadata?: EntityMetadata) {
+    super();
+    if (manager) {
+      this._manager = manager;
+    }
+
+    if (metadata) {
+      // @ts-ignore
+      this.metadata = metadata;
+    }
+  }
 
   public get manager(): EntityManager {
     const context = getNamespace('__cls_context');
@@ -33,10 +45,19 @@ export default class Repository<Entity extends ObjectLiteral> extends TypeORMRep
 
   private readonly specificationExtractor: ISpecificationExtractor<Entity> = new SpecificationExtractorTypeORM<Entity>();
 
-  protected searchCriteria(spec: Specification<Entity>): FindConditions<Entity> {
-    return Object.entries(this.specificationExtractor.extract(spec)).reduce((prev: any, current) => {
+  public searchCriteria(spec: Specification<Entity>): FindConditions<Entity> | FindConditions<Entity>[] {
+    const extractedCriteria = this.specificationExtractor.extract(spec);
+    if (Array.isArray(extractedCriteria)) {
+      return extractedCriteria.map((crit) => this.createCriteria(crit));
+    } else {
+      return this.createCriteria(extractedCriteria);
+    }
+  }
+
+  private createCriteria(criteria: Criteria<Entity>) {
+    return Object.entries(criteria).reduce((prev: any, current) => {
       // need to cheat compiler here as object entries can only have strings (not keyofs)
-      const [specField, searchValue]: [keyof Entity, string] = current as any;
+      let [specField, searchValue]: [keyof Entity, string] = current as any;
 
       const column = this.metadata.columns.find(equalsField(specField))
         || this.metadata.relationIds.find(equalsField(specField));
@@ -54,15 +75,15 @@ export default class Repository<Entity extends ObjectLiteral> extends TypeORMRep
   }
 
   public async findBy(spec: Specification<Entity>): Promise<Entity[]> {
-    const searchCriteria: FindConditions<Entity> = this.searchCriteria(spec);
+    const searchCriteria: FindConditions<Entity> | FindConditions<Entity>[] = this.searchCriteria(spec);
 
-    return this.find(searchCriteria);
+    return this.find({ where: searchCriteria });
   }
 
   public async countBy(spec: Specification<Entity>): Promise<number> {
     const searchCriteria = this.searchCriteria(spec);
 
-    return this.count(searchCriteria);
+    return this.count({ where: searchCriteria });
   }
 
   public async findOneBy(spec: Specification<Entity>): Promise<Entity> {

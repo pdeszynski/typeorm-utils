@@ -6,9 +6,9 @@ abstract class Specification<T> implements ISpecification<T> {
     return new AndSpecification<T>(this, spec);
   }
 
-  public or(spec: Specification<T>): ISpecification<T> {
-    return new OrSpecification<T>(this, spec);
-  }
+  // public or(spec: Specification<T>): ISpecification<T> {
+  //   return new OrSpecification<T>(this, spec);
+  // }
 
   // TODO: the same - if we will be able to use something other than typeorm's
   // find method then we could implement not in all specifications
