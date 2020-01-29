@@ -10,6 +10,10 @@ class AndSpecification<T> extends Specification<T> {
     super();
   }
 
+  public or(spec: Specification<T>): ISpecification<T> {
+    throw new Error("OR can be only a top level specification");
+  }
+
   public rules(): [ISpecification<T>, ISpecification<T>] {
     return [this.left, this.right];
   }
