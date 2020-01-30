@@ -1,6 +1,6 @@
 {
   "name": "typeorm-utils",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "TypeORM additional utilities",
   "main": "dist/index.js",
   "author": "Piotr Deszyński",
