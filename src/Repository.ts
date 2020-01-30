@@ -49,7 +49,7 @@ export default class Repository<Entity extends ObjectLiteral> extends TypeORMRep
   public searchCriteria(spec: Specification<Entity>): FindConditions<Entity> | FindConditions<Entity>[] {
     const extractedCriteria = this.specificationExtractor.extract(spec);
     if (Array.isArray(extractedCriteria)) {
-      return flattenDeep(extractedCriteria.map((crit) => this.createCriteria(crit)));
+      return flattenDeep(extractedCriteria).map((crit) => this.createCriteria(crit));
     } else {
       return this.createCriteria(extractedCriteria);
     }
